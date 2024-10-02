@@ -1,6 +1,7 @@
 package cnu.moksoriro.domain.member;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,11 +20,16 @@ public class Member {
     @Column(name = "member")
     private String memberName;
 
+    private String password;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    public Member(String memberId, String memberName){
+    @Builder
+    public Member(String memberId, String memberName, String password, Collection<Role> roles){
         this.memberId = memberId;
         this.memberName = memberName;
+        this.password = password;
+        this.roles = roles;
     }
 }
