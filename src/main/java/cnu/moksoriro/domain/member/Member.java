@@ -1,5 +1,6 @@
 package cnu.moksoriro.domain.member;
 
+
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class Member {
     @Column(name = "member_id")
     private String memberId;
 
-    @Column(name = "member")
+    @Column(name = "member_name")
     private String memberName;
 
     private String password;
