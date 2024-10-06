@@ -1,6 +1,9 @@
 package cnu.moksoriro.global.security;
 
 
+import cnu.moksoriro.domain.member.repo.MemberRepository;
+import cnu.moksoriro.global.security.jwt.JwtAuthenticationFilter;
+import cnu.moksoriro.global.security.jwt.JwtAuthorizationFilter;
 import cnu.moksoriro.global.security.jwt.JwtConfig;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity //시큐리티 활성화 -> 기본 스프링 필터체인에 등록
 @EnableConfigurationProperties(JwtConfig.class)
-public class SecurityConfig extends WebSecurityConfiguration {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final MemberRepository memberRepository;
     private final CorsConfig corsConfig;
@@ -28,15 +31,9 @@ public class SecurityConfig extends WebSecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
-
-    public SecurityConfig(MembeRepository membeRepository, CorsConfig corsConfig,
+    public SecurityConfig(MemberRepository memberRepository, CorsConfig corsConfig,
                           JwtConfig jwtConfig, UserDetailsService userDetailsService) {
-        this.memberRepository = membeRepository;
+        this.memberRepository = memberRepository;
         this.corsConfig = corsConfig;
         this.jwtConfig = jwtConfig;
     }
@@ -44,11 +41,11 @@ public class SecurityConfig extends WebSecurityConfiguration {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter customAuthenticationFilter = new
-                JwtAuthenticcationFilter(authenticationManager(),
+                JwtAuthenticationFilter(authenticationManager(),
                 jwtConfig);
         customAuthenticationFilter.setUsernameParameter("memberId");
-
-        customAuthenticationFilter.setFilterProcessUrl("/api/lgoin");
+        customAuthenticationFilter.setPasswordParameter("password");
+        customAuthenticationFilter.setFilterProcessUrl("/api/login");
 
         http
                 .addFilter(corsConfig.corsFilter())
