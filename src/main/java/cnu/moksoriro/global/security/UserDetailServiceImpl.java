@@ -1,14 +1,15 @@
 package cnu.moksoriro.global.security;
 
 import cnu.moksoriro.domain.member.Member;
+import cnu.moksoriro.domain.member.repo.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +17,7 @@ import java.util.Collection;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class UserDetailServiceImpl {
+public class UserDetailServiceImpl implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     private final Logger logger =

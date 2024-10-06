@@ -12,6 +12,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,8 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    private final static Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     private final AuthenticationManager authenticationManager;
     private final JwtConfig jwtConfig;
 
@@ -41,10 +45,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (Exception e) {
             e.printStackTrace();
         }
+        log.info("----------------------------------");
+        log.info("input 회원 id -> {}", loginRequestDto.getMemberId());
+
         // 유저네임패스워드 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getUsername(),
+                        loginRequestDto.getMemberId(),
                         loginRequestDto.getPassword());
         // authenticate() 함수가 호출 되면 인증 프로바이더가 유저 디테일 서비스의
         // loadUserByUsername(토큰의 첫번째 파라메터) 를 호출하고
